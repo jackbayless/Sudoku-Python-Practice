@@ -137,7 +137,7 @@ def print_board_2(board: list[list[str]], original_board: list[list[str]]) -> No
             else:
                 print(" " + board[i][j] + " ", end="")
 
-        #everything below edge case for boxes
+        #everything below an edge case for boxes
         print("|")
     for x in range(len(board) * 3 + 4):
         print("-", end="")
@@ -180,7 +180,7 @@ def solve(board: list[list[str]],value: str, row: int, col: int) -> bool:
         col += 1
         return solve(board, value, row, col)
 
-    #store values in memory of current function
+    #store values in memory of the current function
     this_row = row
     this_col = col
     this_val = value
@@ -211,7 +211,69 @@ def do_the_stuff(board: list[list[str]]):
     else:
         print("Impossible!")
 
+def start():
+    board = []
+    i = 0
+    while i < size:
+        row = input(f"Enter row {i + 1}: ")
+        if len(row) != size:
+            print("That's not a valid row! Try again.")
+            continue
+        formated_row = []
+        for j in range(len(row)):
+            char = row[j]
+            if char != "." and (ord(char) < ord("1") or ord(char) > ord("9")):
+                formated_row.append(".")
+            else:
+                formated_row.append(char)
+        board.append(formated_row)
+        i += 1
+    print()
+    print_board(board)
+    response = input("\nDoes this look right? (type yes or no)\n")
+    response = response.lower()
+    if response == "yes" or response == "y":
+        if not valid_starting_conditions(board):
+            print("Invalid starting conditions!")
+            print("Please restart\n")
+            start()
+            exit()
+        else:
+            copy_board = copy.deepcopy(board)
+            if solve(board, "1", 0, 0):
+                print("\nSolved!")
+            else:
+                print("This bored is impossible to solve :(")
+                response = input("\nDo you want to input a different board?\n")
+                response = response.lower()
+                if response == "yes" or response == "y":
+                    start()
+                    exit()
+                else:
+                    print("Have a nice day :)")
+            print_board_2(board, copy_board)
+            response = input("\nDo you want to input a different board?\n")
+            response = response.lower()
+            if response == "yes" or response == "y":
+                start()
+                exit()
+            else:
+                print("Have a nice day :)")
+    else:
+        print("Okay, let's try again.")
+        start()
+        print("exit")
 
-do_the_stuff(solvable_board)
 
+#do_the_stuff(solvable_board)
+
+if __name__ == "__main__":
+    print("==========================================================================")
+    print()
+    print("              <> <> <> Welcome to the sudoku solver! <> <> <>")
+    print()
+    print("==========================================================================\n")
+    print(" -> You will be prompted to enter each row of the board one by one nine times")
+    print(" -> For blank spaces enter .\n")
+    start()
 
