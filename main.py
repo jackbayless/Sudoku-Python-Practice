@@ -262,17 +262,17 @@ def start():
     else:
         print("Okay, let's try again.")
         start()
-        print("exit")
+        exit()
 
 
 #do_the_stuff(solvable_board)
 
 if __name__ == "__main__":
-    print("==========================================================================")
-    print()
-    print("              <> <> <> Welcome to the sudoku solver! <> <> <>")
-    print()
-    print("==========================================================================\n")
+    print("==============================================================================")
+    print("  []  []  []  []  []  []                              []  []  []  []  []  []")
+    print("    []  []  []  []  []   Welcome to the sudoku solver   []  []  []  []  []")
+    print("  []  []  []  []  []  []                              []  []  []  []  []  []")
+    print("==============================================================================\n")
     print(" -> You will be prompted to enter each row of the board one by one nine times")
     print(" -> For blank spaces enter .\n")
     start()

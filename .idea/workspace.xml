@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="506ed900-2746-439b-8ed2-0ea00036071b" name="Changes" comment="everything working">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="506ed900-2746-439b-8ed2-0ea00036071b" name="Changes" comment="complete with a UI">
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -103,7 +102,7 @@
       <option name="presentableId" value="Default" />
       <updated>1762912430620</updated>
       <workItem from="1762912431695" duration="15355000" />
-      <workItem from="1762976731863" duration="4234000" />
+      <workItem from="1762976731863" duration="4946000" />
     </task>
     <task id="LOCAL-00001" summary="everything working">
       <option name="closed" value="true" />
@@ -113,7 +112,15 @@
       <option name="project" value="LOCAL" />
       <updated>1762966894264</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="complete with a UI">
+      <option name="closed" value="true" />
+      <created>1762989992470</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1762989992470</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -121,7 +128,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="everything working" />
-    <option name="LAST_COMMIT_MESSAGE" value="everything working" />
+    <MESSAGE value="complete with a UI" />
+    <option name="LAST_COMMIT_MESSAGE" value="complete with a UI" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/SudukuShit$main.coverage" NAME="main Coverage Results" MODIFIED="1762967972151" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\Users\jackh\PycharmProjects\SudukuShit" />
