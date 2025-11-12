@@ -1,4 +1,5 @@
 import copy
+from termcolor import colored
 
 # 1) Failing initial conditions (invalid from start)
 failing_board = [
@@ -132,7 +133,7 @@ def print_board_2(board: list[list[str]], original_board: list[list[str]]) -> No
 
             #print tiles (two options incase you want to see the originals
             if original_board[i][j].isdigit():
-                print(" " + board[i][j] + " ", end="")
+                print(colored(" " + board[i][j] + " ", "green"),end="")
             else:
                 print(" " + board[i][j] + " ", end="")
 
@@ -143,10 +144,25 @@ def print_board_2(board: list[list[str]], original_board: list[list[str]]) -> No
 
 #normal print board nothing fancy
 def print_board(board: list[list[str]]) -> None:
-    for row in board:
-        for tile in row:
-            print("" + tile + " ", end=" ")
-        print()
+    for i in range(len(board)):
+        if i % 3 == 0:
+            for x in range(len(board) * 3 + 4):
+                print("-", end="")
+            print()
+
+        for j in range(len(board[0])):
+
+            # seperate boxes(vertical part)
+            if j % 3 == 0:
+                print("|", end="")
+
+            print(" " + board[i][j] + " ",end="")
+
+        print("|")
+    for x in range(len(board) * 3 + 4):
+        print("-", end="")
+    print()
+
 
 def solve(board: list[list[str]],value: str, row: int, col: int) -> bool:
 
@@ -189,8 +205,11 @@ def solve(board: list[list[str]],value: str, row: int, col: int) -> bool:
 def do_the_stuff(board: list[list[str]]):
     print_board(board)
     copy_board = copy.deepcopy(board)
-    print(solve(board, "1", 0, 0))
-    print_board_2(board, copy_board)
+    if solve(board, "1", 0, 0):
+        print("Solved!")
+        print_board_2(board, copy_board)
+    else:
+        print("Impossible!")
 
 
 do_the_stuff(solvable_board)
