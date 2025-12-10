@@ -215,15 +215,26 @@ def do_the_stuff(board: list[list[str]]):
 
 def generate_board(filled_cells:int) -> list[list[str]]:
 
+    MIN_CELLS = 10
+
     #create empty board
     board = [["." for _ in range(size)] for _ in range(size)]
     attempts = 0
 
     while True:
+
         attempts += 1
         num_filled_cells = 0
+        placement_attempts = 0
+        MAX_PLACEMENT_ATTEMPTS = 500
+
         while num_filled_cells < filled_cells:
 
+            if placement_attempts > MAX_PLACEMENT_ATTEMPTS:
+                #board failed to generate
+                break
+
+            placement_attempts += 1
             row = random.randint(0, size - 1)
             col = random.randint(0, size - 1)
             val = str(random.randint(1, 9))
@@ -233,23 +244,34 @@ def generate_board(filled_cells:int) -> list[list[str]]:
                 board[row][col] = val
                 num_filled_cells += 1
 
-        #ensure board if solvable
+        #placement failed, restart
+        if num_filled_cells < filled_cells:
+            board = [["." for _ in range(size)] for _ in range(size)]
+            continue
+
+        #ensure board is solvable
         if valid_starting_conditions(board):
             test_copy = copy.deepcopy(board)
             if solve(test_copy, "1", 0, 0):
                 return board
 
-        #if board fails reset
+        #if board isn't solvable, restart
         board = [["." for _ in range(size)] for _ in range(size)]
+
+        #decrease difficult if too many attempts
         if attempts > 40:
-            filled_cells -= 1
+            filled_cells = max(MIN_CELLS, filled_cells - 1)
             attempts = 0
 
 def generate_boards(num_boards: int) -> list[list[list[str]]]:
     boards = []
+    count = 1
     for i in range(num_boards):
         b = generate_board(20)
         boards.append(b)
+        print(f"Generated board: {count}")
+        count += 1
+
     return boards
 
 
@@ -260,11 +282,23 @@ def determine_time_to_solve(board: list[list[str]]):
     end = time.perf_counter()
     return end - start
 
+def test_average_time(num_boards: int):
+    boards = generate_boards(num_boards)
+    times = []
+
+    for board in boards:
+        time = determine_time_to_solve(board)
+        times.append(time)
+
+    avg = sum(times) / len(times)
+    print(f"Average time: {avg:.6f} seconds for {num_boards} boards")
+
 
 
 
 
 #do_the_stuff(solvable_board)
+test_average_time(num_boards=10)
 
 
 
