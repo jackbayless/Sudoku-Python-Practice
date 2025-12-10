@@ -245,14 +245,26 @@ def generate_board(filled_cells:int) -> list[list[str]]:
             filled_cells -= 1
             attempts = 0
 
+def generate_boards(num_boards: int) -> list[list[list[str]]]:
+    boards = []
+    for i in range(num_boards):
+        b = generate_board(20)
+        boards.append(b)
+    return boards
+
+
+def determine_time_to_solve(board: list[list[str]]):
+    board_copy = copy.deepcopy(board)
+    start = time.perf_counter()
+    solve(board_copy, "1", 0, 0)
+    end = time.perf_counter()
+    return end - start
 
 
 
 
 
+#do_the_stuff(solvable_board)
 
-
-
-do_the_stuff(solvable_board)
 
 
