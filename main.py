@@ -1,5 +1,7 @@
 import copy
 from termcolor import colored
+import time
+import random
 
 # 1) Failing initial conditions (invalid from start)
 failing_board = [
@@ -210,6 +212,45 @@ def do_the_stuff(board: list[list[str]]):
         print_board_2(board, copy_board)
     else:
         print("Impossible!")
+
+def generate_board(filled_cells:int) -> list[list[str]]:
+
+    #create empty board
+    board = [["." for _ in range(size)] for _ in range(size)]
+    attempts = 0
+
+    while True:
+        attempts += 1
+        num_filled_cells = 0
+        while num_filled_cells < filled_cells:
+
+            row = random.randint(0, size - 1)
+            col = random.randint(0, size - 1)
+            val = str(random.randint(1, 9))
+
+            #fill designated number of filled cells
+            if board[row][col] == "." and num_is_valid(board, val, row, col):
+                board[row][col] = val
+                num_filled_cells += 1
+
+        #ensure board if solvable
+        if valid_starting_conditions(board):
+            test_copy = copy.deepcopy(board)
+            if solve(test_copy, "1", 0, 0):
+                return board
+
+        #if board fails reset
+        board = [["." for _ in range(size)] for _ in range(size)]
+        if attempts > 40:
+            filled_cells -= 1
+            attempts = 0
+
+
+
+
+
+
+
 
 
 do_the_stuff(solvable_board)

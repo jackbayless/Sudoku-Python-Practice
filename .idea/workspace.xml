@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="506ed900-2746-439b-8ed2-0ea00036071b" name="Changes" comment="everything working">
+    <list default="true" id="506ed900-2746-439b-8ed2-0ea00036071b" name="Changes" comment="added more cool print featrues">
+      <change beforePath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -21,21 +22,24 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "jackbayless"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;jackbayless&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/jackbayless/Sudoku-Python-Practice.git",
-    "accountId": "71346ccd-9b75-43ef-81da-63d288a2d746"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/jackbayless/Sudoku-Python-Practice.git&quot;,
+    &quot;accountId&quot;: &quot;71346ccd-9b75-43ef-81da-63d288a2d746&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/AppData/Local/Programs/Python/Python313/Lib/urllib/parse.py" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="35MGGNS5z36LDDCosRapIDi1WGr" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -49,6 +53,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Python.main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "master",
     "node.js.detected.package.eslint": "true",
@@ -102,6 +107,9 @@
       <option name="presentableId" value="Default" />
       <updated>1762912430620</updated>
       <workItem from="1762912431695" duration="15355000" />
+      <workItem from="1762989854883" duration="1913000" />
+      <workItem from="1763077664944" duration="40000" />
+      <workItem from="1765390260548" duration="631000" />
     </task>
     <task id="LOCAL-00001" summary="everything working">
       <option name="closed" value="true" />
@@ -122,6 +130,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="everything working" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/SudukuShit$main.coverage" NAME="main Coverage Results" MODIFIED="1762967972151" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\Users\jackh\PycharmProjects\SudukuShit" />
+    <SUITE FILE_PATH="coverage/SudukuShit$main.coverage" NAME="main Coverage Results" MODIFIED="1765390291909" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\Users\jackh\PycharmProjects\SudukuShit" />
   </component>
 </project>
