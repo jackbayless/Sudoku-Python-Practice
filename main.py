@@ -1,4 +1,6 @@
 import copy
+import sys
+
 from termcolor import colored
 import time
 import random
@@ -48,14 +50,7 @@ unsolvable_board = [
     [".", ".", ".", ".", "8", ".", ".", "7", "9"]
 ]
 
-test_board = [
-    ["1",".",".",".",".","."],
-    [".",".",".",".",".","."],
-    [".",".",".",".",".","."],
-    [".",".",".",".",".","."],
-    [".",".",".",".",".","."],
-    [".",".",".",".",".","."]
-]
+
 
 size = 9
 box = 3
@@ -171,6 +166,34 @@ def print_board(board: list[list[str]]) -> None:
         print("-", end="")
     print()
 
+def print_board_with_numbers(board: list[list[str]]) -> None:
+
+    for i in range(len(board)):
+        if i % 3 == 0:
+            if i == 0:
+                print("y ", end = "")
+            else:
+                print("  ", end = "")
+            for x in range(len(board) * 3 + 4):
+                print("-", end="")
+            print()
+
+        for j in range(len(board[0])):
+
+            if j == 0:
+                print(f"{9 - i} ", end="")
+
+            # seperate boxes(vertical part)
+            if j % 3 == 0:
+                print("|", end="")
+
+            print(" " + board[i][j] + " ",end="")
+
+        print("|")
+    print("  ", end = "")
+    for x in range(len(board) * 3 + 4):
+        print("-", end="")
+    print("\n    1  2  3   4  5  6   7  8  9 x")
 
 def solve(board: list[list[str]],value: str, row: int, col: int) -> bool:
 
@@ -349,6 +372,49 @@ def process_image(image_path:str) -> list[list[str]]:
 
     return board
 
+def confirm_board(board: list[list[str]]):
+
+    print(colored("Enter 'e' to exit anytime and continue", 'green'))
+
+    user_input = input("Confirm Board is Correct: (yes/no)")
+    print_board_with_numbers(board)
+    user_input = user_input.lower().strip()
+
+    if user_input == "yes" or user_input == "y":
+        return True
+
+    while True:
+        x = input("Enter x coordinate: ")
+        if x == "e":
+            return False
+
+        y = input("Enter y coordinate: ")
+        if y == "e":
+            return False
+
+        val = input("Enter value: ")
+        if val == "e":
+            return False
+        if not (0 < int(val) < 10):
+            print("Invalid Input, Enter a Number between 1 and 9")
+            continue
+
+        y = 9 - int(y)
+        x = int(x) - 1
+
+        board[y][x] = val
+
+        print_board_with_numbers(board)
+        user_input = input("Confirm Board is Correct: (yes/no)")
+        user_input = user_input.lower().strip()
+
+        if user_input == "yes" or user_input == "y":
+            return True
+        if user_input == "e":
+            return False
+        else:
+            continue
+
 
 
 
@@ -364,8 +430,42 @@ digit = pytesseract.image_to_string(
 print(digit)
 """
 
-board = process_image("images/test2.png")
-print_board(board)
+#board = process_image("images/test2.png")
+print_board_with_numbers(solvable_board)
+
+if __name__ == "__main__":
+    image_path = ""
+
+    if len(sys.argv) > 0:
+        image_path = sys.argv[1]
+    else:
+        while True:
+            print("Options:")
+            print("1) Manual Input")
+            print("2) Image Input")
+            print("3) Exit\n")
+
+            user_input = input(" -> ")
+
+            if user_input == "1":
+                x = 1
+            elif user_input == "2":
+                x = 2
+            elif user_input == "3":
+                break
+            else:
+                print("Invalid Input")
+
+
+
+
+
+
+        image_path = input("Enter Image Path: ")
+
+
+
+
 
 
 
