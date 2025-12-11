@@ -1,7 +1,16 @@
 import copy
+import sys
+
+import numpy as np
 from termcolor import colored
 import time
 import random
+import pytesseract
+from PIL import Image
+import cv2
+import os
+
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 # 1) Failing initial conditions (invalid from start)
 failing_board = [
@@ -42,14 +51,7 @@ unsolvable_board = [
     [".", ".", ".", ".", "8", ".", ".", "7", "9"]
 ]
 
-test_board = [
-    ["1",".",".",".",".","."],
-    [".",".",".",".",".","."],
-    [".",".",".",".",".","."],
-    [".",".",".",".",".","."],
-    [".",".",".",".",".","."],
-    [".",".",".",".",".","."]
-]
+
 
 size = 9
 box = 3
@@ -165,6 +167,34 @@ def print_board(board: list[list[str]]) -> None:
         print("-", end="")
     print()
 
+def print_board_with_numbers(board: list[list[str]]) -> None:
+
+    for i in range(len(board)):
+        if i % 3 == 0:
+            if i == 0:
+                print("y ", end = "")
+            else:
+                print("  ", end = "")
+            for x in range(len(board) * 3 + 4):
+                print("-", end="")
+            print()
+
+        for j in range(len(board[0])):
+
+            if j == 0:
+                print(f"{9 - i} ", end="")
+
+            # seperate boxes(vertical part)
+            if j % 3 == 0:
+                print("|", end="")
+
+            print(" " + board[i][j] + " ",end="")
+
+        print("|")
+    print("  ", end = "")
+    for x in range(len(board) * 3 + 4):
+        print("-", end="")
+    print("\n    1  2  3   4  5  6   7  8  9 x")
 
 def solve(board: list[list[str]],value: str, row: int, col: int) -> bool:
 
@@ -213,6 +243,13 @@ def do_the_stuff(board: list[list[str]]):
     else:
         print("Impossible!")
 
+
+
+
+
+
+
+
 def generate_board(filled_cells:int) -> list[list[str]]:
 
     MIN_CELLS = 10
@@ -240,7 +277,7 @@ def generate_board(filled_cells:int) -> list[list[str]]:
             val = str(random.randint(1, 9))
 
             #fill designated number of filled cells
-            if board[row][col] == "." and num_is_valid(board, val, row, col):
+            if board[row][col] == "." and num_is_valid(board, val, row, col) and valid_starting_conditions(board):
                 board[row][col] = val
                 num_filled_cells += 1
 
@@ -293,12 +330,226 @@ def test_average_time(num_boards: int):
     avg = sum(times) / len(times)
     print(f"Average time: {avg:.6f} seconds for {num_boards} boards")
 
+def process_image_start(image_path:str) -> list[list[str]]:
+
+    os.makedirs("processed_images", exist_ok=True)
+
+
+
+    img = cv2.imread(image_path)
+    if img is None:
+        return [[]]
+    h, w, _ = img.shape
+
+
+
+    cell_h = h // 9
+    cell_w = w // 9
+    average = (cell_h + cell_w) / 2
+    margin = int(average * 0.1)
+
+    board = []
+
+    for row in range(size):
+        board.append([])
+        for col in range(size):
+
+            y1 = row * cell_h
+            y2 = (row + 1) * cell_h
+
+            x1 = col * cell_w
+            x2 = (col + 1) * cell_w
+
+            margin_y = margin
+            if row % 3 == 0:
+                margin_y += int(cell_h * 0.05)
+
+            margin_x = margin
+            if col % 3 == 0:
+                margin_x += int(cell_w * 0.05)
+
+            cell = img[
+                y1 + margin_y : y2 - margin_y,
+                x1 + margin_x : x2 - margin_x
+            ]
+
+            gray = cv2.cvtColor(cell, cv2.COLOR_BGR2GRAY)
+
+            thresh = cv2.adaptiveThreshold(
+                gray,
+                255,
+                cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                cv2.THRESH_BINARY_INV,
+                11,
+                2
+            )
+
+            digit = pytesseract.image_to_string(
+                thresh,
+                config="--psm 10 -c tessedit_char_whitelist=0123456789").strip()
+            digit = str(digit)
+            if len(digit) == 0: digit = "."
+            board[row].append(str(digit))
+
+            cv2.imwrite(f"processed_images/cell_{row}_{col}.png", thresh)
+
+    return board
+
+def confirm_board(board: list[list[str]]):
+
+    print(colored("Enter 'e' to exit anytime and continue", 'green'))
+
+    user_input = input("Confirm Board is Correct: (yes/no)")
+    print_board_with_numbers(board)
+    user_input = user_input.lower().strip()
+    if user_input == "yes" or user_input == "y":
+        return True
+    if user_input == "e":
+        return False
+
+    if user_input == "yes" or user_input == "y":
+        return True
+
+    while True:
+        x = input("Enter x coordinate: ")
+        if x == "e":
+            return False
+
+        y = input("Enter y coordinate: ")
+        if y == "e":
+            return False
+
+        val = input("Enter value: ")
+        if val == "e":
+            return False
+        if (not 0 < int(val) < 10) and (not val == "."):
+            print("Invalid Input, Enter a Number between 1 and 9 or '.' for blanks")
+            continue
+
+        y = 9 - int(y)
+        x = int(x) - 1
+
+        board[y][x] = val
+
+        print_board_with_numbers(board)
+        user_input = input("Confirm Board is Correct: (yes/no)")
+        user_input = user_input.lower().strip()
+
+        if user_input == "yes" or user_input == "y":
+            return True
+        if user_input == "e":
+            return False
+        else:
+            continue
+
+
+def manuel_input_start():
+    board = []
+    i = 0
+    while i < size:
+        row = input(f"Enter row {i + 1}: ")
+        if len(row) != size:
+            print("That's not a valid row! Try again.")
+            continue
+        formated_row = []
+        for j in range(len(row)):
+            char = row[j]
+            if char != "." and (ord(char) < ord("1") or ord(char) > ord("9")):
+                formated_row.append(".")
+            else:
+                formated_row.append(char)
+        board.append(formated_row)
+        i += 1
+    print()
+    print_board(board)
+    response = input("\nDoes this look right? (type yes or no)\n")
+    response = response.lower()
+    if response == "yes" or response == "y":
+        if not valid_starting_conditions(board):
+            print("Invalid starting conditions!")
+            print("Please restart\n")
+            manuel_input_start()
+            return
+        else:
+            copy_board = copy.deepcopy(board)
+            if solve(board, "1", 0, 0):
+                print("\nSolved!")
+            else:
+                print("This bored is impossible to solve :(")
+                response = input("\nDo you want to input a different board?\n")
+                response = response.lower()
+                if response == "yes" or response == "y":
+                    manuel_input_start()
+                    return
+                else:
+                    print("Have a nice day :)")
+                    return
+            print_board_2(board, copy_board)
+            response = input("\nDo you want to input a different board?\n")
+            response = response.lower()
+            if response == "yes" or response == "y":
+                manuel_input_start()
+                return
+            else:
+                print("Have a nice day :)")
+    else:
+        print("Okay, let's try again.")
+        manuel_input_start()
+        return
 
 
 
 
-#do_the_stuff(solvable_board)
-test_average_time(num_boards=10)
+if __name__ == "__main__":
+    image_path = ""
 
+    if len(sys.argv) > 1:
+        image_path = sys.argv[1]
+        process_image_start(image_path)
+    else:
+
+        print("==============================================================================")
+        print("  []  []  []  []  []  []                              []  []  []  []  []  []")
+        print("    []  []  []  []  []   Welcome to the sudoku solver   []  []  []  []  []")
+        print("  []  []  []  []  []  []                              []  []  []  []  []  []")
+        print("==============================================================================\n\n")
+
+        while True:
+
+            print("\nOptions:")
+            print("1) Manual Input")
+            print("2) Image Input")
+            print("3) Exit\n")
+
+            user_input = input(" -> ")
+
+            if user_input == "1":
+                manuel_input_start()
+
+            elif user_input == "2":
+                print("Please ensure image is cropped tightly")
+                image_path = input("Enter Image Path: ")
+                print("Processing Image...")
+                board = process_image_start(image_path)
+                if len(board) != size:
+                    continue
+
+                print_board(board)
+                if not confirm_board(board):
+                    continue
+
+                original_board = copy.deepcopy(board)
+                if solve(board, "1", 0, 0):
+                    print("\nSolved!\n")
+                else:
+                    print("This bored is impossible to solve :(")
+
+                print_board_2(board, original_board)
+
+            elif user_input == "3":
+                break
+
+            else:
+                print("Invalid Input\n")
 
 
