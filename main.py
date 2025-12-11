@@ -2,6 +2,12 @@ import copy
 from termcolor import colored
 import time
 import random
+import pytesseract
+from PIL import Image
+import cv2
+import os
+
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 # 1) Failing initial conditions (invalid from start)
 failing_board = [
@@ -240,7 +246,7 @@ def generate_board(filled_cells:int) -> list[list[str]]:
             val = str(random.randint(1, 9))
 
             #fill designated number of filled cells
-            if board[row][col] == "." and num_is_valid(board, val, row, col):
+            if board[row][col] == "." and num_is_valid(board, val, row, col) and valid_starting_conditions(board):
                 board[row][col] = val
                 num_filled_cells += 1
 
@@ -293,12 +299,55 @@ def test_average_time(num_boards: int):
     avg = sum(times) / len(times)
     print(f"Average time: {avg:.6f} seconds for {num_boards} boards")
 
+def process_image(image_path:str) -> list[list[str]]:
+
+    os.makedirs("processed_images", exist_ok=True)
+
+    img = cv2.imread(image_path)
+    h,w,_ = img.shape
+
+    cell_h = h // 9
+    cell_w = w // 9
+
+    board = []
+
+    for row in range(size):
+        board.append([])
+        for col in range(size):
+
+            y1 = row * cell_h
+            y2 = (row + 1) * cell_h
+
+            x1 = col * cell_w
+            x2 = (col + 1) * cell_w
+
+            cell = img[y1:y2, x1:x2]
+            digit = pytesseract.image_to_string(
+                cell,
+                config="--psm 10 -c tessedit_char_whitelist=0123456789").strip()
+            digit = str(digit)
+            if len(digit) == 0: digit = "."
+            board[row].append(str(digit))
+
+    return board
+
+
 
 
 
 
 #do_the_stuff(solvable_board)
-test_average_time(num_boards=10)
+#test_average_time(num_boards=10)
+"""
+img = Image.open("images/7.png")
+digit = pytesseract.image_to_string(
+    img,
+    config="--psm 10 -c tessedit_char_whitelist=0123456789")
+print(digit)
+"""
+
+board = process_image("images/test2.png")
+print_board(board)
 
 
 
