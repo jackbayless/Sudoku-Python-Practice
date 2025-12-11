@@ -454,7 +454,7 @@ if __name__ == "__main__":
             elif user_input == "3":
                 break
             else:
-                print("Invalid Input")
+                print("Invalid Input\n")
 
 
 
