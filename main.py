@@ -242,6 +242,13 @@ def do_the_stuff(board: list[list[str]]):
     else:
         print("Impossible!")
 
+
+
+
+
+
+
+
 def generate_board(filled_cells:int) -> list[list[str]]:
 
     MIN_CELLS = 10
@@ -322,7 +329,7 @@ def test_average_time(num_boards: int):
     avg = sum(times) / len(times)
     print(f"Average time: {avg:.6f} seconds for {num_boards} boards")
 
-def process_image(image_path:str) -> list[list[str]]:
+def process_image_start(image_path:str) -> list[list[str]]:
 
     os.makedirs("processed_images", exist_ok=True)
     margin = 2
@@ -416,6 +423,58 @@ def confirm_board(board: list[list[str]]):
             continue
 
 
+def manuel_input_start():
+    board = []
+    i = 0
+    while i < size:
+        row = input(f"Enter row {i + 1}: ")
+        if len(row) != size:
+            print("That's not a valid row! Try again.")
+            continue
+        formated_row = []
+        for j in range(len(row)):
+            char = row[j]
+            if char != "." and (ord(char) < ord("1") or ord(char) > ord("9")):
+                formated_row.append(".")
+            else:
+                formated_row.append(char)
+        board.append(formated_row)
+        i += 1
+    print()
+    print_board(board)
+    response = input("\nDoes this look right? (type yes or no)\n")
+    response = response.lower()
+    if response == "yes" or response == "y":
+        if not valid_starting_conditions(board):
+            print("Invalid starting conditions!")
+            print("Please restart\n")
+            manuel_input_start()
+            exit()
+        else:
+            copy_board = copy.deepcopy(board)
+            if solve(board, "1", 0, 0):
+                print("\nSolved!")
+            else:
+                print("This bored is impossible to solve :(")
+                response = input("\nDo you want to input a different board?\n")
+                response = response.lower()
+                if response == "yes" or response == "y":
+                    manuel_input_start()
+                    exit()
+                else:
+                    print("Have a nice day :)")
+            print_board_2(board, copy_board)
+            response = input("\nDo you want to input a different board?\n")
+            response = response.lower()
+            if response == "yes" or response == "y":
+                manuel_input_start()
+                exit()
+            else:
+                print("Have a nice day :)")
+    else:
+        print("Okay, let's try again.")
+        manuel_input_start()
+        exit()
 
 
 
@@ -438,7 +497,17 @@ if __name__ == "__main__":
 
     if len(sys.argv) > 0:
         image_path = sys.argv[1]
+        process_image_start(image_path)
     else:
+
+        print("==============================================================================")
+        print("  []  []  []  []  []  []                              []  []  []  []  []  []")
+        print("    []  []  []  []  []   Welcome to the sudoku solver   []  []  []  []  []")
+        print("  []  []  []  []  []  []                              []  []  []  []  []  []")
+        print("==============================================================================\n")
+        print(" -> You will be prompted to enter each row of the board one by one nine times")
+        print(" -> For blank spaces enter .\n")
+
         while True:
             print("Options:")
             print("1) Manual Input")
@@ -448,24 +517,16 @@ if __name__ == "__main__":
             user_input = input(" -> ")
 
             if user_input == "1":
-                x = 1
+                manuel_input_start()
+
             elif user_input == "2":
-                x = 2
+                image_path = input("Enter Image Path: ")
+                process_image_start(image_path)
+
             elif user_input == "3":
                 break
+
             else:
                 print("Invalid Input\n")
-
-
-
-
-
-
-        image_path = input("Enter Image Path: ")
-
-
-
-
-
 
 
