@@ -1,6 +1,7 @@
 import copy
 import sys
 
+import numpy as np
 from termcolor import colored
 import time
 import random
@@ -345,7 +346,7 @@ def process_image_start(image_path:str) -> list[list[str]]:
     cell_h = h // 9
     cell_w = w // 9
     average = (cell_h + cell_w) / 2
-    margin = int(average * 0.15)
+    margin = int(average * 0.1)
 
     board = []
 
@@ -421,7 +422,7 @@ def confirm_board(board: list[list[str]]):
         val = input("Enter value: ")
         if val == "e":
             return False
-        if not (0 < int(val) < 10) or not val == ".":
+        if (not 0 < int(val) < 10) and (not val == "."):
             print("Invalid Input, Enter a Number between 1 and 9 or '.' for blanks")
             continue
 
@@ -499,19 +500,6 @@ def manuel_input_start():
 
 
 
-#do_the_stuff(solvable_board)
-#test_average_time(num_boards=10)
-"""
-img = Image.open("images/7.png")
-digit = pytesseract.image_to_string(
-    img,
-    config="--psm 10 -c tessedit_char_whitelist=0123456789")
-print(digit)
-"""
-
-#board = process_image("images/test2.png")
-#print_board_with_numbers(solvable_board)
-
 if __name__ == "__main__":
     image_path = ""
 
@@ -527,7 +515,8 @@ if __name__ == "__main__":
         print("==============================================================================\n\n")
 
         while True:
-            print("Options:")
+
+            print("\nOptions:")
             print("1) Manual Input")
             print("2) Image Input")
             print("3) Exit\n")
