@@ -302,6 +302,7 @@ def test_average_time(num_boards: int):
 def process_image(image_path:str) -> list[list[str]]:
 
     os.makedirs("processed_images", exist_ok=True)
+    margin = 2
 
     img = cv2.imread(image_path)
     h,w,_ = img.shape
@@ -321,13 +322,30 @@ def process_image(image_path:str) -> list[list[str]]:
             x1 = col * cell_w
             x2 = (col + 1) * cell_w
 
-            cell = img[y1:y2, x1:x2]
+            cell = img[
+                y1 + margin : y2 - margin,
+                x1 + margin : x2 - margin
+            ]
+
+            gray = cv2.cvtColor(cell, cv2.COLOR_BGR2GRAY)
+
+            thresh = cv2.adaptiveThreshold(
+                gray,
+                255,
+                cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                cv2.THRESH_BINARY_INV,
+                11,
+                2
+            )
+
             digit = pytesseract.image_to_string(
-                cell,
+                thresh,
                 config="--psm 10 -c tessedit_char_whitelist=0123456789").strip()
             digit = str(digit)
             if len(digit) == 0: digit = "."
             board[row].append(str(digit))
+
+            cv2.imwrite(f"processed_images/cell_{row}_{col}.png", thresh)
 
     return board
 
