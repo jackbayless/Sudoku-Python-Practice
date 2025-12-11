@@ -332,13 +332,20 @@ def test_average_time(num_boards: int):
 def process_image_start(image_path:str) -> list[list[str]]:
 
     os.makedirs("processed_images", exist_ok=True)
-    margin = 2
+
+
 
     img = cv2.imread(image_path)
-    h,w,_ = img.shape
+    if img is None:
+        return [[]]
+    h, w, _ = img.shape
+
+
 
     cell_h = h // 9
     cell_w = w // 9
+    average = (cell_h + cell_w) / 2
+    margin = int(average * 0.15)
 
     board = []
 
@@ -352,9 +359,17 @@ def process_image_start(image_path:str) -> list[list[str]]:
             x1 = col * cell_w
             x2 = (col + 1) * cell_w
 
+            margin_y = margin
+            if row % 3 == 0:
+                margin_y += int(cell_h * 0.05)
+
+            margin_x = margin
+            if col % 3 == 0:
+                margin_x += int(cell_w * 0.05)
+
             cell = img[
-                y1 + margin : y2 - margin,
-                x1 + margin : x2 - margin
+                y1 + margin_y : y2 - margin_y,
+                x1 + margin_x : x2 - margin_x
             ]
 
             gray = cv2.cvtColor(cell, cv2.COLOR_BGR2GRAY)
@@ -386,6 +401,10 @@ def confirm_board(board: list[list[str]]):
     user_input = input("Confirm Board is Correct: (yes/no)")
     print_board_with_numbers(board)
     user_input = user_input.lower().strip()
+    if user_input == "yes" or user_input == "y":
+        return True
+    if user_input == "e":
+        return False
 
     if user_input == "yes" or user_input == "y":
         return True
@@ -402,8 +421,8 @@ def confirm_board(board: list[list[str]]):
         val = input("Enter value: ")
         if val == "e":
             return False
-        if not (0 < int(val) < 10):
-            print("Invalid Input, Enter a Number between 1 and 9")
+        if not (0 < int(val) < 10) or not val == ".":
+            print("Invalid Input, Enter a Number between 1 and 9 or '.' for blanks")
             continue
 
         y = 9 - int(y)
@@ -449,7 +468,7 @@ def manuel_input_start():
             print("Invalid starting conditions!")
             print("Please restart\n")
             manuel_input_start()
-            exit()
+            return
         else:
             copy_board = copy.deepcopy(board)
             if solve(board, "1", 0, 0):
@@ -460,21 +479,22 @@ def manuel_input_start():
                 response = response.lower()
                 if response == "yes" or response == "y":
                     manuel_input_start()
-                    exit()
+                    return
                 else:
                     print("Have a nice day :)")
+                    return
             print_board_2(board, copy_board)
             response = input("\nDo you want to input a different board?\n")
             response = response.lower()
             if response == "yes" or response == "y":
                 manuel_input_start()
-                exit()
+                return
             else:
                 print("Have a nice day :)")
     else:
         print("Okay, let's try again.")
         manuel_input_start()
-        exit()
+        return
 
 
 
@@ -490,12 +510,12 @@ print(digit)
 """
 
 #board = process_image("images/test2.png")
-print_board_with_numbers(solvable_board)
+#print_board_with_numbers(solvable_board)
 
 if __name__ == "__main__":
     image_path = ""
 
-    if len(sys.argv) > 0:
+    if len(sys.argv) > 1:
         image_path = sys.argv[1]
         process_image_start(image_path)
     else:
@@ -504,9 +524,7 @@ if __name__ == "__main__":
         print("  []  []  []  []  []  []                              []  []  []  []  []  []")
         print("    []  []  []  []  []   Welcome to the sudoku solver   []  []  []  []  []")
         print("  []  []  []  []  []  []                              []  []  []  []  []  []")
-        print("==============================================================================\n")
-        print(" -> You will be prompted to enter each row of the board one by one nine times")
-        print(" -> For blank spaces enter .\n")
+        print("==============================================================================\n\n")
 
         while True:
             print("Options:")
@@ -520,8 +538,24 @@ if __name__ == "__main__":
                 manuel_input_start()
 
             elif user_input == "2":
+                print("Please ensure image is cropped tightly")
                 image_path = input("Enter Image Path: ")
-                process_image_start(image_path)
+                print("Processing Image...")
+                board = process_image_start(image_path)
+                if len(board) != size:
+                    continue
+
+                print_board(board)
+                if not confirm_board(board):
+                    continue
+
+                original_board = copy.deepcopy(board)
+                if solve(board, "1", 0, 0):
+                    print("\nSolved!\n")
+                else:
+                    print("This bored is impossible to solve :(")
+
+                print_board_2(board, original_board)
 
             elif user_input == "3":
                 break
